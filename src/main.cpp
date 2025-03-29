@@ -9,7 +9,10 @@ int main ()
 {
     set_log_lvl (kDebug);
 
-    DrawMandelbrot ();
+    DrawMandelbrotDefault ();
+    DrawMandelbrotArray ();
+    // DrawMandelbrot128 ();
+    DrawMandelbrot256 ();
 
     return EXIT_SUCCESS;
 }
