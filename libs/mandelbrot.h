@@ -24,6 +24,7 @@ enum MoveMandelbrot
 
 const size_t kNumVertexes         = 4;
 const size_t kNumVertexesOptimize = 8;
+const size_t kNumVertexesOptimizeFullPipeLine = 16;
 
 const signed long kWindowHeight = 720;
 const signed long kWindowWidth  = 1080;
@@ -35,6 +36,7 @@ const char* const kWindowTitleDefault = "MandelbrotDefault";
 const char* const kWindowTitleArray   = "MandelbrotArray";
 const char* const kWindowTitle128     = "Mandelbrot128";
 const char* const kWindowTitle256     = "Mandelbrot256";
+const char* const kWindowTitle256FullPipeLine = "Mandelbrot256FullPipeLine";
 
 const size_t kMaxNumIteration    = 256;
 const float kMaxModuleComplex   = 100;
@@ -42,13 +44,14 @@ const float kArrMaxModuleComplex [kNumVertexes] = {kMaxModuleComplex, kMaxModule
 
 const float kScale               = 300;
 const float kScaleShift          = 10;
-const size_t kNumberOfIterations = 100;
+const size_t kNumberOfIterations = 1000;
 const signed long kShift         = 100;
 
 
-enum MandelbrotError DrawMandelbrotDefault (void);
-enum MandelbrotError DrawMandelbrotArray   (void);
-enum MandelbrotError DrawMandelbrot128     (void);
-enum MandelbrotError DrawMandelbrot256     (void);
+enum MandelbrotError DrawMandelbrotDefault         (void);
+enum MandelbrotError DrawMandelbrotArray           (void);
+enum MandelbrotError DrawMandelbrot128             (void);
+enum MandelbrotError DrawMandelbrot256             (void);
+enum MandelbrotError DrawMandelbrot256FullPipeLine (void);
 
 #endif // MANDELBROT_H

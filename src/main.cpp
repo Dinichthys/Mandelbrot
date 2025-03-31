@@ -13,6 +13,7 @@ int main ()
     DrawMandelbrotArray ();
     // DrawMandelbrot128 ();
     DrawMandelbrot256 ();
+    DrawMandelbrot256FullPipeLine ();
 
     return EXIT_SUCCESS;
 }
