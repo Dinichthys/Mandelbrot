@@ -22,6 +22,7 @@ void ParseFlags (const int argc, char* const argv[], settings_of_program_t* cons
     const struct option modifications [] =
     {
         {"log-file",     required_argument, 0, 'l'},
+        {"out-file",     required_argument, 0, 'o'},
         {"window-size",  required_argument, 0, 'w'},
         {"scale",        required_argument, 0, 's'},
         {"coordinates",  required_argument, 0, 'c'},
@@ -37,7 +38,7 @@ void ParseFlags (const int argc, char* const argv[], settings_of_program_t* cons
     while (mode != kInvalidMode)
     {
         count_iterate++;
-        mode = getopt_long (argc, argv, "+l:w:s:c:gh", modifications, &long_index);
+        mode = getopt_long (argc, argv, "+l:o:w:s:c:gh", modifications, &long_index);
         switch (mode)
         {
             case 'l':
@@ -47,7 +48,19 @@ void ParseFlags (const int argc, char* const argv[], settings_of_program_t* cons
                 {
                     mode = kInvalidMode;
                     set->stop_program = true;
-                    fprintf (stderr, "There is no file with name %s\n", optarg);
+                    fprintf (stderr, "Can't open file \"%s\" for logging.\n", optarg);
+                }
+                count_iterate++;
+                break;
+            }
+            case 'o':
+            {
+                set->out_file = fopen (optarg, "w");
+                if (!(set->out_file))
+                {
+                    mode = kInvalidMode;
+                    set->stop_program = true;
+                    fprintf (stderr, "Can't open file \"%s\" for output.\n", optarg);
                 }
                 count_iterate++;
                 break;
@@ -137,13 +150,18 @@ void ParseFlags (const int argc, char* const argv[], settings_of_program_t* cons
     }
 }
 
-void SettingsCtor (settings_of_program_t* const set)
+enum SettingsError SettingsCtor (settings_of_program_t* const set)
 {
     ASSERT (set != NULL, "Invalid argument: set = %p\n", set);
 
     set->stop_program = false;
 
     set->log_file  = stderr;
+    set->out_file  = fopen (kOutputFileName, "w");
+    if (set->out_file == NULL)
+    {
+        return kCantOpenOutputFile;
+    }
 
     set->window_height = kWindowHeight;
     set->window_width  = kWindowWidth;
@@ -153,13 +171,20 @@ void SettingsCtor (settings_of_program_t* const set)
     set->coordinates_y = kWindowHeight / 2;
 
     set->graphic_mode = false;
+
+    return kDoneSettings;
 }
 
 void SettingsDtor (settings_of_program_t* const set)
 {
     ASSERT (set != NULL, "Invalid argument: set = %p\n", set);
 
-    if (set->log_file != stdin)
+    if (set->log_file != stderr)
+    {
+        CLOSE_AND_NULL (set->log_file);
+    }
+
+    if (set->log_file != stdout)
     {
         CLOSE_AND_NULL (set->log_file);
     }

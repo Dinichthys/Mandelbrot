@@ -10,7 +10,11 @@
 int main (const int argc, char* const argv[])
 {
     settings_of_program_t settings = {};
-    SettingsCtor (&settings);
+    if (SettingsCtor (&settings) != kDoneSettings)
+    {
+        fprintf (stderr, "Can't create the structure");
+        return EXIT_FAILURE;
+    }
 
     ParseFlags (argc, argv, &settings);
     if (settings.stop_program)

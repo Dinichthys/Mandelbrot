@@ -44,15 +44,18 @@ enum MandelbrotError DrawMandelbrot (settings_of_program_t set,
 
     sf::Event event;
 
-    while (true)
+    bool window_is_open = true;
+
+    while (window_is_open)
     {
         MandelbrotFunc (iteration_stop_arr, set);
 
-        if (window.pollEvent(event))
+        while (window.pollEvent(event))
         {
             if (AnalyseKey (event, &set) == kCloseWindow)
             {
                 window.close ();
+                window_is_open = false;
                 break;
             }
         }

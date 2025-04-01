@@ -64,6 +64,12 @@ MandelbrotError MandelbrotNaive (int* const iteration_stop_arr, const settings_o
     return kDoneMandelbrot;
 }
 
+#define _ARRAY_FOR_INSTRUCTION(body_for)                    \
+            for (index = 0; index < kNumVertexes; index++)  \
+            {                                               \
+                body_for;                                   \
+            }
+
 MandelbrotError MandelbrotArray (int* const iteration_stop_arr, const settings_of_program_t settings)
 {
     ASSERT ((settings.graphic_mode) && (iteration_stop_arr != NULL), "MandelbrotArray got iteration_stop_arr as null ptr.\n");
@@ -76,53 +82,47 @@ MandelbrotError MandelbrotArray (int* const iteration_stop_arr, const settings_o
 
     float scale = settings.scale;
 
+    size_t index = 0;
+
     for (size_t y_check = 0; y_check < screen_height; y_check++)
     {
         float y_start [kNumVertexes] = {};
-        for (size_t index = 0; index < kNumVertexes; index++)
-        {
-            y_start [index] = (y_base  - (float) y_check) / scale;
-        }
+        _ARRAY_FOR_INSTRUCTION (y_start [index] = (y_base  - (float) y_check) / scale)
 
         for (size_t x_check = 0; x_check < screen_width; x_check += kNumVertexes)
         {
             float x_start [kNumVertexes] = {};
+            _ARRAY_FOR_INSTRUCTION (x_start [index] = ((float) x_check + index - x_base) / scale)
 
             float x_cur [kNumVertexes] = {};
+            _ARRAY_FOR_INSTRUCTION (x_cur [index] = x_start [index])
+
             float y_cur [kNumVertexes] = {};
-
-            for (size_t index = 0; index < kNumVertexes; index++)
-            {
-                x_start [index] = ((float) x_check + index - x_base) / scale;
-
-                x_cur [index] = x_start [index];
-                y_cur [index] = y_start [index];
-            }
+            _ARRAY_FOR_INSTRUCTION (y_cur [index] = y_start [index])
 
             int iteration_stop [kNumVertexes] = {};
 
             for (size_t num_point = 0; num_point < kMaxNumIteration; num_point++)
             {
                 float square_x [kNumVertexes] = {};
+                _ARRAY_FOR_INSTRUCTION (square_x [index] = x_cur [index] * x_cur [index])
+
                 float square_y [kNumVertexes] = {};
-                float dub_x_mul_y  [kNumVertexes] = {};
+                _ARRAY_FOR_INSTRUCTION (square_y [index] = y_cur [index] * y_cur [index])
+
+                float dub_x_mul_y [kNumVertexes] = {};
+                _ARRAY_FOR_INSTRUCTION (dub_x_mul_y  [index] = 2 * x_cur [index] * y_cur [index])
+
+                int cmp [kNumVertexes] = {};
+                _ARRAY_FOR_INSTRUCTION (cmp [index] = (square_x [index] + square_y [index] < kMaxModuleComplex))
+
+                _ARRAY_FOR_INSTRUCTION (iteration_stop [index] += cmp [index])
 
                 int mask = 0;
+                _ARRAY_FOR_INSTRUCTION (mask += cmp [index])
 
-                for (size_t index = 0; index < kNumVertexes; index++)
-                {
-                    square_x [index] = x_cur [index] * x_cur [index];
-                    square_y [index] = y_cur [index] * y_cur [index];
-                    dub_x_mul_y  [index] = 2 * x_cur [index] * y_cur [index];
-
-                    if (square_x [index] + square_y [index] < kMaxModuleComplex)
-                    {
-                        mask++;
-                        (iteration_stop [index])++;
-                        x_cur [index] = square_x [index] - square_y [index] + x_start [index];
-                        y_cur [index] = dub_x_mul_y [index] + y_start [index];
-                    }
-                }
+                _ARRAY_FOR_INSTRUCTION (x_cur [index] = square_x [index] - square_y [index] + x_start [index])
+                _ARRAY_FOR_INSTRUCTION (y_cur [index] = dub_x_mul_y [index] + y_start [index])
 
                 if (mask == 0)
                 {
@@ -144,6 +144,8 @@ MandelbrotError MandelbrotArray (int* const iteration_stop_arr, const settings_o
 
     return kDoneMandelbrot;
 }
+
+#undef _ARRAY_FOR_INSTRUCTION
 
 enum MandelbrotError Mandelbrot256 (int* const iteration_stop_arr, const settings_of_program_t settings)
 {

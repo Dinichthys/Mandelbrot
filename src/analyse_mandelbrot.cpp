@@ -21,17 +21,16 @@ enum MandelbrotError AnalyseMandelbrot (settings_of_program_t set,
     set.window_width  = screen_width;
     set.window_height = screen_height;
 
-    fprintf (stderr, "Start:\n");
     unsigned int aux = 0;
-    unsigned long long start = __rdtscp (&aux);
+    unsigned long long start = 0;
     unsigned long long end   = 0;
 
     for (size_t iteration_index = 0; iteration_index < kNumberOfIterations; iteration_index++)
     {
+        start = __rdtscp (&aux);
         MandelbrotFunc (NULL, set);
         end = __rdtscp (&aux);
-        fprintf (stderr, "%lu: %llu\n",iteration_index, end - start);
-        start = end;
+        fprintf (set.out_file, "%llu\n",end - start);
     }
 
     return kDoneMandelbrot;

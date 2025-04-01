@@ -4,9 +4,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+enum SettingsError
+{
+    kDoneSettings       = 0,
+    kCantOpenOutputFile = 1,
+};
+
 typedef struct settings_of_program
 {
     FILE* log_file;
+    FILE* out_file;
 
     size_t window_width;
     size_t window_height;
@@ -21,9 +28,10 @@ typedef struct settings_of_program
 } settings_of_program_t;
 
 const int kInvalidMode = -1;
+const char* const kOutputFileName = "Output.txt";
 
-void SettingsCtor (settings_of_program_t* const set);
-void SettingsDtor (settings_of_program_t* const set);
-void ParseFlags   (const int argc, char* const argv[], settings_of_program_t* const set);
+enum SettingsError SettingsCtor (settings_of_program_t* const set);
+void               SettingsDtor (settings_of_program_t* const set);
+void               ParseFlags   (const int argc, char* const argv[], settings_of_program_t* const set);
 
 #endif // SETTINGS_H
