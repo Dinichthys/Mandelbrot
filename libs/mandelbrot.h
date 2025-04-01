@@ -8,50 +8,25 @@ enum MandelbrotError
 {
     kDoneMandelbrot = 0,
 
-    kCloseWindow = 1,
+    kCloseWindow              = 1,
+    kCantCallocIterationArray = 2,
 };
 
-enum MoveMandelbrot
-{
-    kRight = 86,
-    kLeft  = 87,
-    kDown  = 88,
-    kUp    = 89,
-
-    kMinus = 41,
-    kPlus  = 42,
-};
-
-const size_t kNumVertexes         = 4;
-const size_t kNumVertexesOptimize = 8;
+const size_t kNumVertexes                     =  4;
+const size_t kNumVertexesOptimize             =  8;
 const size_t kNumVertexesOptimizeFullPipeLine = 16;
 
-const signed long kWindowHeight = 720;
-const signed long kWindowWidth  = 1080;
-
-const float kStartCoordinatesX = kWindowWidth  / 2;
-const float kStartCoordinatesY = kWindowHeight / 2;
-
-const char* const kWindowTitleDefault = "MandelbrotDefault";
-const char* const kWindowTitleArray   = "MandelbrotArray";
-const char* const kWindowTitle128     = "Mandelbrot128";
-const char* const kWindowTitle256     = "Mandelbrot256";
-const char* const kWindowTitle256FullPipeLine = "Mandelbrot256FullPipeLine";
-
-const size_t kMaxNumIteration    = 256;
-const float kMaxModuleComplex   = 100;
+const size_t kMaxNumIteration = 256;
+const float kMaxModuleComplex = 100;
 const float kArrMaxModuleComplex [kNumVertexes] = {kMaxModuleComplex, kMaxModuleComplex, kMaxModuleComplex, kMaxModuleComplex};
 
-const float kScale               = 300;
-const float kScaleShift          = 10;
-const size_t kNumberOfIterations = 1000;
-const signed long kShift         = 100;
+#include "draw.h"
+#include "analyse_mandelbrot.h"
 
+enum MandelbrotError MandelbrotNaive           (int* const iteration_stop_arr, const settings_of_program_t settings);
+enum MandelbrotError MandelbrotArray           (int* const iteration_stop_arr, const settings_of_program_t settings);
+enum MandelbrotError Mandelbrot256             (int* const iteration_stop_arr, const settings_of_program_t settings);
+enum MandelbrotError Mandelbrot256FullPipeLine (int* const iteration_stop_arr, const settings_of_program_t settings);
 
-enum MandelbrotError DrawMandelbrotDefault         (void);
-enum MandelbrotError DrawMandelbrotArray           (void);
-enum MandelbrotError DrawMandelbrot128             (void);
-enum MandelbrotError DrawMandelbrot256             (void);
-enum MandelbrotError DrawMandelbrot256FullPipeLine (void);
 
 #endif // MANDELBROT_H

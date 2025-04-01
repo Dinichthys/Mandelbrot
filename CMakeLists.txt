@@ -4,6 +4,9 @@ project (mandelbrot)
 add_executable (${PROJECT_NAME}
     src/main.cpp
     src/mandelbrot.cpp
+    src/settings.cpp
+    src/draw.cpp
+    src/analyse_mandelbrot.cpp
     libs/My_lib/Logger/logging.cpp
     libs/My_lib/Assert/print_error.cpp
 )

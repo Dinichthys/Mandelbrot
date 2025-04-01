@@ -7,6 +7,7 @@
 #include "../Assert/print_error.h"
 #include "../Logger/logging.h"
 
+#ifdef DEBUG
 #define ASSERT(comparison, ...)                                                     \
     do                                                                              \
     {                                                                               \
@@ -20,5 +21,8 @@
         };                                                                          \
     }                                                                               \
     while (0)
+#else
+#define ASSERT(...)
+#endif // DEBUG
 
 #endif // MY_ASSERT_H
