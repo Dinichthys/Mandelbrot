@@ -425,7 +425,6 @@ SIMD 256 Full Pipeline  G++ -O3
 Измерения показали, что в среднем на отрисовку одного кадра при фиксированной частоте процессора в 2 ГГц тратиться (4.10 ± 0.02) * 10<sup>7</sup> тактов процессора.
 
  -->
-
 <table>
     <thead>
         <tr>
@@ -449,29 +448,30 @@ SIMD 256 Full Pipeline  G++ -O3
             <td align="center">Наивная реализация</td>
             <td align="center">39.8 ± 0.1</td>
             <td align="center">39.75 ± 0.09</td>
-            <td align="center">116.5 ± 0.5</td>
+            <td align="center">39.06 ± 0.08</td>
             <td align="center">39.0 ± 0.1</td>
         </tr>
         <tr>
             <td align="center">Реализация на массивах</td>
             <td align="center">10.37 ± 0.02</td>
             <td align="center">14.65 ± 0.1</td>
-            <td align="center">220 ± 10</td>
+            <td align="center">11.82 ± 0.03</td>
             <td align="center">11.83 ± 0.04</td>
         </tr>
         <tr>
             <td align="center">Реализация с использованием SIMD</td>
             <td align="center">6.55 ± 0.02</td>
             <td align="center">6.54 ± 0.02</td>
-            <td align="center">58.0 ± 0.2</td>
+            <td align="center">7.15 ± 0.03</td>
             <td align="center">7.15 ± 0.03</td>
         </tr>
         <tr>
             <td align="center">Реализация с использованием SIMD и развёрткой цикла</td>
             <td align="center">4.10 ± 0.01</td>
             <td align="center">4.10 ± 0.02</td>
-            <td align="center">32.6 ± 0.1</td>
+            <td align="center">4.55 ± 0.07</td>
             <td align="center">4.49 ± 0.02</td>
         </tr>
     </tbody>
 </table>
+
