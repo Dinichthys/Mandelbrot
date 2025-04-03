@@ -33,7 +33,7 @@ MandelbrotError MandelbrotNaive (int* const iteration_stop_arr, const settings_o
             float x_cur = x_start;
             float y_cur = y_start;
 
-            int iteration_stop = 0;
+            volatile int iteration_stop = 0;
 
             for (size_t num_point = 0; num_point < kMaxNumIteration; num_point++)
             {
@@ -179,6 +179,7 @@ enum MandelbrotError Mandelbrot256 (int* const iteration_stop_arr, const setting
 
         for (size_t x_check = 0; x_check < screen_width; x_check += kNumVertexesOptimize)
         {
+            volatile int mask = 0;
             __m256 x_start   = _mm256_set1_ps ((float) x_check);
             __m256 temp      = _mm256_set_ps (7, 6, 5, 4, 3, 2, 1, 0);
 
@@ -206,7 +207,7 @@ enum MandelbrotError Mandelbrot256 (int* const iteration_stop_arr, const setting
 
                 iteration_stop_256 = _mm256_sub_epi32 (iteration_stop_256, (__m256i) cmp_square_mask);
 
-                int mask = _mm256_movemask_ps (cmp_square_mask);
+                mask = _mm256_movemask_ps (cmp_square_mask);
 
                 cmp_square_mask = (__m256) _mm256_sub_epi32 (kMaxInt32U256,(__m256i) cmp_square_mask);
 
