@@ -7,7 +7,8 @@
 
 #include "settings.h"
 
-const size_t kNumberOfIterations = 100;
+const size_t kNumberOfIterations = 1000;
+const size_t kFrequency          = 2'000'000'000;
 
 enum MandelbrotError AnalyseMandelbrot (settings_of_program_t set,
                                         enum MandelbrotError (*MandelbrotFunc) (int* const iteration_stop_arr,

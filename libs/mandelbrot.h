@@ -10,6 +10,17 @@ enum MandelbrotError
 
     kCloseWindow              = 1,
     kCantCallocIterationArray = 2,
+    kCantLoadFont             = 3,
+};
+
+enum MandelbrotVersion
+{
+    kAll = 0,
+
+    kNaive                 = 1,
+    kArray                 = 2,
+    k256Intrin             = 3,
+    k256IntrinFullPipeline = 4,
 };
 
 const size_t kNumVertexes                     =  4;

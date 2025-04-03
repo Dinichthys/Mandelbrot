@@ -27,6 +27,7 @@ void ParseFlags (const int argc, char* const argv[], settings_of_program_t* cons
         {"scale",        required_argument, 0, 's'},
         {"coordinates",  required_argument, 0, 'c'},
         {"graphic-mode",       no_argument, 0, 'g'},
+        {"version",      required_argument, 0, 'v'},
         {"help",               no_argument, 0, 'h'},
         {0,                              0, 0,  0 }
     };
@@ -38,7 +39,7 @@ void ParseFlags (const int argc, char* const argv[], settings_of_program_t* cons
     while (mode != kInvalidMode)
     {
         count_iterate++;
-        mode = getopt_long (argc, argv, "+l:o:w:s:c:gh", modifications, &long_index);
+        mode = getopt_long (argc, argv, "+l:o:w:s:c:gv:h", modifications, &long_index);
         switch (mode)
         {
             case 'l':
@@ -122,6 +123,18 @@ void ParseFlags (const int argc, char* const argv[], settings_of_program_t* cons
                 set->graphic_mode = true;
                 break;
             }
+            case 'v':
+            {
+                set->mandelbrot_version = atoi (optarg);
+                if (errno == ERANGE)
+                {
+                    fprintf (stderr, "Can't convert optarg to a mandelbrot version num.\n");
+                    mode = kInvalidMode;
+                    set->stop_program = true;
+                }
+                count_iterate++;
+                break;
+            }
             case 'h':
             {
                 PrintHelp ();
@@ -199,6 +212,7 @@ void SettingsDtor (settings_of_program_t* const set)
 
     set->graphic_mode = false;
 
+    set->mandelbrot_version = kAll;
     set->stop_program = true;
 }
 

@@ -2,6 +2,8 @@
 
 #include "draw.h"
 
+#include <x86intrin.h>
+
 #include "My_lib/Assert/my_assert.h"
 
 #include <SFML/Graphics/Vertex.hpp>
@@ -13,8 +15,8 @@ static enum MandelbrotError AnalyseKey (const sf::Event event,
                                         settings_of_program_t* settings);
 
 enum MandelbrotError DrawMandelbrot (settings_of_program_t set,
-                                     enum MandelbrotError MandelbrotFunc (int* const iteration_stop_arr,
-                                                                          const settings_of_program_t settings),
+                                     enum MandelbrotError (*MandelbrotFunc) (int* const iteration_stop_arr,
+                                                                             const settings_of_program_t settings),
                                      const char* const window_name)
 {
     ASSERT (window_name    != NULL, "DrawMandelbrot got window_name as a null ptr in argument.\n");
@@ -29,11 +31,24 @@ enum MandelbrotError DrawMandelbrot (settings_of_program_t set,
     set.window_width  = screen_width;
     set.window_height = screen_height;
 
-    int* iteration_stop_arr = (int*) calloc (screen_width * screen_height, sizeof (int));
+    int* iteration_stop_arr = (int*) aligned_alloc (256, screen_width * screen_height * sizeof (int));
     if (iteration_stop_arr == NULL)
     {
         return kCantCallocIterationArray;
     }
+
+    sf::Event event;
+
+    sf::Font font;
+    if (!font.loadFromFile ("data/PFAgoraSlabPro Bold.ttf"))
+    {
+        free (iteration_stop_arr);
+        return kCantLoadFont;
+    }
+
+    char fps_str [1000] = "";
+    sf::Text text (fps_str, font, 3);
+    text.setCharacterSize(20);
 
     sf::RenderWindow window (sf::VideoMode ({(unsigned int) screen_width, (unsigned int) screen_height}),
                              window_name);
@@ -42,13 +57,17 @@ enum MandelbrotError DrawMandelbrot (settings_of_program_t set,
 
     sf::VertexArray vertexes (sf::PrimitiveType::Points, vertex_size);
 
-    sf::Event event;
-
     bool window_is_open = true;
+
+    unsigned int aux = 0;
+    unsigned long long start = 0;
+    unsigned long long end   = 0;
 
     while (window_is_open)
     {
+        start = __rdtscp (&aux);
         MandelbrotFunc (iteration_stop_arr, set);
+        end = __rdtscp (&aux);
 
         while (window.pollEvent(event))
         {
@@ -69,7 +88,10 @@ enum MandelbrotError DrawMandelbrot (settings_of_program_t set,
             vertexes [point_index].color.b = iteration_stop_arr [point_index];
         }
 
+        sprintf (fps_str, "%2d", (int) (2'000'000'000 / (end - start)));
+        text.setString (fps_str);
         window.draw (vertexes);
+        window.draw (text);
         window.display ();
     }
 

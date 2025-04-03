@@ -30,7 +30,7 @@ enum MandelbrotError AnalyseMandelbrot (settings_of_program_t set,
         start = __rdtscp (&aux);
         MandelbrotFunc (NULL, set);
         end = __rdtscp (&aux);
-        fprintf (set.out_file, "%llu\n",end - start);
+        fprintf (set.out_file, "%llu\n", end - start);
     }
 
     return kDoneMandelbrot;

@@ -24,6 +24,8 @@ typedef struct settings_of_program
 
     bool graphic_mode;
 
+    int mandelbrot_version;
+
     bool stop_program;
 } settings_of_program_t;
 
