@@ -425,6 +425,19 @@ SIMD 256 Full Pipeline  G++ -O3
 Измерения показали, что в среднем на отрисовку одного кадра при фиксированной частоте процессора в 2 ГГц тратиться (4.10 ± 0.02) * 10<sup>7</sup> тактов процессора.
 
  -->
+
+Все измерения производились при фиксированной частоте процессора в **2 ГГц**.
+
+Фиксирование происходило по средством команд:
+``` bash
+sudo cpupower frequency-set -u 2010Mhz
+sudo cpupower frequency-set -d 1990Mhz
+```
+После завершения снятия измерений фиксация сбрасывалась командой:
+``` bash
+sudo cpupower frequency-set -g ondemand
+```
+
 <table>
     <thead>
         <tr>
@@ -435,7 +448,7 @@ SIMD 256 Full Pipeline  G++ -O3
     <tbody>
         <tr>
             <td align="center" rowspan = 2></td>
-            <td align="center" colspan = 2>G++</td>
+            <td align="center" colspan = 2>g++</td>
             <td align="center" colspan = 2>clang++</td>
         </tr>
         <tr>
@@ -446,32 +459,133 @@ SIMD 256 Full Pipeline  G++ -O3
         </tr>
         <tr>
             <td align="center">Наивная реализация</td>
-            <td align="center">39.8 ± 0.1</td>
-            <td align="center">39.75 ± 0.09</td>
-            <td align="center">39.06 ± 0.08</td>
-            <td align="center">39.0 ± 0.1</td>
+            <td align="center">39.8 ± 0.1
+            <img src="data/plot_Naive.png" alt="Фото">
+            </td>
+            <td align="center">39.75 ± 0.09
+            <img src="data/plot_Naive_G++_O3.png" alt="Фото">
+            </td>
+            <td align="center">39.06 ± 0.08
+            <img src="data/plot_Naive_clang++_O2.png" alt="Фото">
+            </td>
+            <td align="center">39.0 ± 0.1
+            <img src="data/plot_Naive_clang++_O3.png" alt="Фото">
+            </td>
         </tr>
         <tr>
             <td align="center">Реализация на массивах</td>
-            <td align="center">10.37 ± 0.02</td>
-            <td align="center">14.65 ± 0.1</td>
-            <td align="center">11.82 ± 0.03</td>
-            <td align="center">11.83 ± 0.04</td>
+            <td align="center">10.37 ± 0.02
+            <img src="data/plot_Array.png" alt="Фото">
+            </td>
+            <td align="center">14.65 ± 0.1
+            <img src="data/plot_Array_G++_O3.png" alt="Фото">
+            </td>
+            <td align="center">11.82 ± 0.03
+            <img src="data/plot_Array_clang++_O2.png" alt="Фото">
+            </td>
+            <td align="center">11.83 ± 0.04
+            <img src="data/plot_Array_clang++_O3.png" alt="Фото">
+            </td>
         </tr>
         <tr>
             <td align="center">Реализация с использованием SIMD</td>
-            <td align="center">6.55 ± 0.02</td>
-            <td align="center">6.54 ± 0.02</td>
-            <td align="center">7.15 ± 0.03</td>
-            <td align="center">7.15 ± 0.03</td>
+            <td align="center">6.55 ± 0.02
+            <img src="data/plot_256.png" alt="Фото">
+            </td>
+            <td align="center">6.54 ± 0.02
+            <img src="data/plot_256_G++_O3.png" alt="Фото">
+            </td>
+            <td align="center">7.15 ± 0.03
+            <img src="data/plot_256_clang++_O2.png" alt="Фото">
+            </td>
+            <td align="center">7.15 ± 0.03
+            <img src="data/plot_256_clang++_O3.png" alt="Фото">
+            </td>
         </tr>
         <tr>
             <td align="center">Реализация с использованием SIMD и развёрткой цикла</td>
-            <td align="center">4.10 ± 0.01</td>
-            <td align="center">4.10 ± 0.02</td>
-            <td align="center">4.55 ± 0.07</td>
-            <td align="center">4.49 ± 0.02</td>
+            <td align="center">4.10 ± 0.01
+            <img src="data/plot_256_full_pipeline.png" alt="Фото">
+            </td>
+            <td align="center">4.10 ± 0.02
+            <img src="data/plot_256_full_pipeline_G++_O3.png" alt="Фото">
+            </td>
+            <td align="center">4.55 ± 0.07
+            <img src="data/plot_256_full_pipeline_clang++_O2.png" alt="Фото">
+            </td>
+            <td align="center">4.49 ± 0.02
+            <img src="data/plot_256_full_pipeline_clang++_O3.png" alt="Фото">
+            </td>
         </tr>
     </tbody>
 </table>
 
+<table>
+    <thead>
+        <tr>
+            <th align="center" >Реализация</th>
+            <th align="center" colspan = 4>Во сколько раз ускорилась работа программы относительно наивной версии в зависимости от компилятора и флага оптимизации</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td align="center" rowspan = 2></td>
+            <td align="center" colspan = 2>g++</td>
+            <td align="center" colspan = 2>clang++</td>
+        </tr>
+        <tr>
+            <td align="center">-O2</td>
+            <td align="center">-O3</td>
+            <td align="center">-O2</td>
+            <td align="center">-O3</td>
+        </tr>
+        <tr>
+            <td align="center">Наивная реализация</td>
+            <td align="center">1</td>
+            <td align="center">1</td>
+            <td align="center">1</td>
+            <td align="center">1</td>
+        </tr>
+        <tr>
+            <td align="center">Реализация на массивах</td>
+            <td align="center">3.84 ± 0.01</td>
+            <td align="center">2.71 ± 0.02</td>
+            <td align="center">3.30 ± 0.01</td>
+            <td align="center">3.30 ± 0.01</td>
+        </tr>
+        <tr>
+            <td align="center">Реализация с использованием SIMD</td>
+            <td align="center">6.08 ± 0.02</td>
+            <td align="center">6.08 ± 0.02</td>
+            <td align="center">5.46 ± 0.03</td>
+            <td align="center">5.45 ± 0.03</td>
+        </tr>
+        <tr>
+            <td align="center">Реализация с использованием SIMD и развёрткой цикла</td>
+            <td align="center">9.71 ± 0.03</td>
+            <td align="center">9.70 ± 0.05</td>
+            <td align="center">8.6 ± 0.1</td>
+            <td align="center">8.69 ± 0.04</td>
+        </tr>
+        <tr>
+            <td align="center">Диаграммы затраченного времени в тактах процессора на одну итерацию отрисовки экрана</td>
+            <td align="center">
+            <img src="data/g++_O2.png" alt="Фото">
+            </td>
+            <td align="center">
+            <img src="data/g++_O3.png" alt="Фото">
+            </td>
+            <td align="center">
+            <img src="data/clang++_O2.png" alt="Фото">
+            </td>
+            <td align="center">
+            <img src="data/clang++_O3.png" alt="Фото">
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+## Вывод
+Приведённые оптимизации не ускоряют программу ровно в 4, в случае с оптимизацией на массивах, и ровно в 8, в случае с оптимизацией с интринсиками, так как есть некоторые участки функции, где нет оптимизированных вычислений, то есть время, потраченное на их обработку, всегда будет входить в измерения.
+
+Однако, данные способы помогают ускорить программу до 9.7 раз, что означает, что не стоит пренебрегать ими.

@@ -4,8 +4,25 @@ mandelbrot
 
 build
 
+count_dispers.py
+
 Output.txt
 Output_1.txt
 Output_2.txt
 Output_3.txt
 Output_4.txt
+
+Output_1_2.txt
+Output_2_2.txt
+Output_3_2.txt
+Output_4_2.txt
+
+Output_1_clang.txt
+Output_2_clang.txt
+Output_3_clang.txt
+Output_4_clang.txt
+
+Output_1_clang_2.txt
+Output_2_clang_2.txt
+Output_3_clang_2.txt
+Output_4_clang_2.txt
