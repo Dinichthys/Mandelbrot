@@ -6,6 +6,10 @@ build
 
 count_dispers.py
 
+g++_O2_bolt.png
+main.bolt.fdata
+mandelbrot.bolt
+
 Output.txt
 Output_1.txt
 Output_2.txt
@@ -26,3 +30,8 @@ Output_1_clang_2.txt
 Output_2_clang_2.txt
 Output_3_clang_2.txt
 Output_4_clang_2.txt
+
+Output_1_bolt.txt
+Output_2_bolt.txt
+Output_3_bolt.txt
+Output_4_bolt.txt
