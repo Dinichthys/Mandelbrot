@@ -426,17 +426,6 @@ SIMD 256 Full Pipeline  G++ -O3
 
  -->
 
-Все измерения производились при фиксированной частоте процессора в **2 ГГц**.
-
-Фиксирование происходило по средством команд:
-``` bash
-sudo cpupower frequency-set -u 2010Mhz
-sudo cpupower frequency-set -d 1990Mhz
-```
-После завершения снятия измерений фиксация сбрасывалась командой:
-``` bash
-sudo cpupower frequency-set -g ondemand
-```
 
 <table>
     <thead>
@@ -458,11 +447,26 @@ sudo cpupower frequency-set -g ondemand
             <td align="center">Процессор</td>
             <td align="center">AMD Ryzen 7 7730U with Radeon Graphics
             <p>
-            16 ядер</td>
+            16 ядер
+            </td>
+        </tr>
+        <tr>
+            <td align="center">Частота процессора на момент измерений</td>
+            <td align="center">2 ГГц
+            </td>
         </tr>
     </tbody>
 </table>
 
+Фиксирование частоты процессора происходило по средством команд:
+``` bash
+sudo cpupower frequency-set -u 2010Mhz
+sudo cpupower frequency-set -d 1990Mhz
+```
+После завершения снятия измерений фиксация сбрасывалась командой:
+``` bash
+sudo cpupower frequency-set -g ondemand
+```
 <table>
     <thead>
         <tr>
