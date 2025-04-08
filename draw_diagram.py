@@ -36,11 +36,16 @@ with open('Output_1.txt', 'r') as f:
 
 x = np.empty(1000, dtype=np.int16)
 
+# for i in range (1, 997):
+#     if (data[i] > data[i-1]*1.005) & (data[i]> data[i+1]*1.005):
+#         data[i] = (data[i-1]+data[i+1])/2
+
 for i in range (1, 1001):
     x [i-1] = i
 
 plt.figure(figsize=(fig_size))
 plt.plot (x[:500], data[250:750])
+plt.axis([0, 500, 3.92*10**8, 4.05*10**8])
 plt.title("Наивная версия в компиляторе G++ с флагом -O2\n Задержка в тактах в зависимости от номера итерации")
 plt.xlabel('Номер итерации')
 plt.ylabel('Задержка (такты)')
@@ -53,11 +58,16 @@ with open('Output_2.txt', 'r') as f:
 
 x = np.empty(1000, dtype=np.int16)
 
+# for i in range (1, 999):
+#     if (data[i] > data[i-1]*1.005) & (data[i]> data[i+1]*1.005):
+#         data[i] = (data[i-1]+data[i+1])/2
+
 for i in range (1, 1001):
     x [i-1] = i
 
 plt.figure(figsize=(fig_size))
 plt.plot (x[:500], data[250:750])
+plt.axis([0, 500, 1.025*10**8, 1.06*10**8])
 plt.title("Реализация на массивах в компиляторе G++ с флагом -O2\n Задержка в тактах в зависимости от номера итерации")
 plt.xlabel('Номер итерации')
 plt.ylabel('Задержка (такты)')
@@ -70,11 +80,16 @@ with open('Output_3.txt', 'r') as f:
 
 x = np.empty(1000, dtype=np.int16)
 
+# for i in range (1, 998):
+#     if (data[i] > data[i-1]*1.005) & (data[i]> data[i+1]*1.005):
+#         data[i] = (data[i-1]+data[i+1])/2
+
 for i in range (1, 1001):
     x [i-1] = i
 
 plt.figure(figsize=(fig_size))
 plt.plot (x[:500], data[250:750])
+plt.axis([0, 500, 6.4*10**7, 6.9*10**7])
 plt.title("Реализация с интринсиками размера 256\n в компиляторе G++ с флагом -O2\n Задержка в тактах в зависимости от номера итерации")
 plt.xlabel('Номер итерации')
 plt.ylabel('Задержка (такты)')
@@ -87,11 +102,16 @@ with open('Output_4.txt', 'r') as f:
 
 x = np.empty(1000, dtype=np.int16)
 
+# for i in range (1, 999):
+#     if (data[i] > data[i-1]*1.005) & (data[i]> data[i+1]*1.005):
+#         data[i] = (data[i-1]+data[i+1])/2
+
 for i in range (1, 1001):
     x [i-1] = i
 
 plt.figure(figsize=(fig_size))
 plt.plot (x[:500], data[300:800])
+plt.axis([0, 500,2.6*10**7, 2.9*10**7])
 plt.title("Реализация с интринсиками размера 256 бит с полным конвейером\nв компиляторе G++ с флагом -O2\n Задержка в тактах в зависимости от номера итерации")
 plt.xlabel('Номер итерации')
 plt.ylabel('Задержка (такты)')
