@@ -24,14 +24,14 @@ enum MandelbrotError DrawMandelbrot (settings_of_program_t set,
 
     size_t screen_height = set.window_height;
     size_t screen_width  = set.window_width +
-                                          ((kNumVertexesOptimizeFullPipeLine
-                                            - (set.window_width % kNumVertexesOptimizeFullPipeLine))
-                                          % kNumVertexesOptimizeFullPipeLine);
+                                          ((kNumVertexesOptimize * kNumberOfLoopUnrolling)
+                                            - (set.window_width % (kNumVertexesOptimize * kNumberOfLoopUnrolling))
+                                          % (kNumVertexesOptimize * kNumberOfLoopUnrolling));
 
     set.window_width  = screen_width;
     set.window_height = screen_height;
 
-    int* iteration_stop_arr = (int*) aligned_alloc (256, screen_width * screen_height * sizeof (int));
+    int* iteration_stop_arr = (int*) aligned_alloc (kIntrinsicSize, screen_width * screen_height * sizeof (int));
     if (iteration_stop_arr == NULL)
     {
         return kCantCallocIterationArray;
@@ -46,9 +46,9 @@ enum MandelbrotError DrawMandelbrot (settings_of_program_t set,
         return kCantLoadFont;
     }
 
-    char fps_str [1000] = "";
-    sf::Text text (fps_str, font, 3);
-    text.setCharacterSize(20);
+    char fps_str [kFPSStringLength] = "";
+    sf::Text text (fps_str, font, kNumberOfChars);
+    text.setCharacterSize(kCharacterSize);
 
     sf::RenderWindow window (sf::VideoMode ({(unsigned int) screen_width, (unsigned int) screen_height}),
                              window_name);
@@ -88,7 +88,7 @@ enum MandelbrotError DrawMandelbrot (settings_of_program_t set,
             vertexes [point_index].color.b = iteration_stop_arr [point_index];
         }
 
-        sprintf (fps_str, "%2d", (int) (2'000'000'000 / (end - start)));
+        sprintf (fps_str, "%2d", (int) (kCPUFrequency / (end - start)));
         text.setString (fps_str);
         window.draw (vertexes);
         window.draw (text);

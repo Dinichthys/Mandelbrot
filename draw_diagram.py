@@ -23,6 +23,81 @@ graph_names = ['Наивная реализация',
                'Реализация с интринсиками размера 256 бит',
                'Реализация с интринсиками размера 256 бит с полным конвейером']
 
+plot_stable_names = ['Naive_stable.png',
+                     'Array_stable.png',
+                     '256_stable.png',
+                     '256_full_pipeline_stable.png']
+
+fig_size = 10,6
+
+version_num = 0
+with open('Output_1.txt', 'r') as f:
+   data = [float(line.strip()) for line in f]
+
+x = np.empty(1000, dtype=np.int16)
+
+for i in range (1, 1001):
+    x [i-1] = i
+
+plt.figure(figsize=(fig_size))
+plt.plot (x[:500], data[250:750])
+plt.title("Наивная версия в компиляторе G++ с флагом -O2\n Задержка в тактах в зависимости от номера итерации")
+plt.ylabel('Номер итерации')
+plt.xlabel('Задержка (такты)')
+plt.savefig(plot_stable_names [version_num], dpi = 300)
+plt.clf ()
+
+version_num = 1
+with open('Output_2.txt', 'r') as f:
+   data = [float(line.strip()) for line in f]
+
+x = np.empty(1000, dtype=np.int16)
+
+for i in range (1, 1001):
+    x [i-1] = i
+
+plt.figure(figsize=(fig_size))
+plt.plot (x[:500], data[250:750])
+plt.title("Реализация на массивах в компиляторе G++ с флагом -O2\n Задержка в тактах в зависимости от номера итерации")
+plt.ylabel('Номер итерации')
+plt.xlabel('Задержка (такты)')
+plt.savefig(plot_stable_names [version_num], dpi = 300)
+plt.clf ()
+
+version_num = 2
+with open('Output_3.txt', 'r') as f:
+   data = [float(line.strip()) for line in f]
+
+x = np.empty(1000, dtype=np.int16)
+
+for i in range (1, 1001):
+    x [i-1] = i
+
+plt.figure(figsize=(fig_size))
+plt.plot (x[:500], data[250:750])
+plt.title("Реализация с интринсиками размера 256\n в компиляторе G++ с флагом -O2\n Задержка в тактах в зависимости от номера итерации")
+plt.ylabel('Номер итерации')
+plt.xlabel('Задержка (такты)')
+plt.savefig(plot_stable_names [version_num], dpi = 300)
+plt.clf ()
+
+version_num = 3
+with open('Output_4.txt', 'r') as f:
+   data = [float(line.strip()) for line in f]
+
+x = np.empty(1000, dtype=np.int16)
+
+for i in range (1, 1001):
+    x [i-1] = i
+
+plt.figure(figsize=(fig_size))
+plt.plot (x[:500], data[300:800])
+plt.title("Реализация с интринсиками размера 256 бит с полным конвейером\nв компиляторе G++ с флагом -O2\n Задержка в тактах в зависимости от номера итерации")
+plt.ylabel('Номер итерации')
+plt.xlabel('Задержка (такты)')
+plt.savefig(plot_stable_names [version_num], dpi = 300)
+plt.clf ()
+
 # with open('Output_1_bolt.txt', 'r') as f:
 #    data = [float(line.strip()) for line in f]
 #
@@ -115,49 +190,42 @@ graph_names = ['Наивная реализация',
 #
 # print ('Величина равна ', avg [version_num], ' а погрешность ',version_num,' версии равна ', int (round_significant (delta [version_num])))
 
-avg = [1, 3.84, 6.08, 9.71]
-
-plt.bar (['Naive', 'Array', 'SIMD 256', 'SIMD 256\nFull Pipeline'], avg)
-plt.ylabel ('Ускорение программы в зависимости\n от способа оптимизации в разах\n относительно наивной версии')
-plt.title("Компилятор G++ с флагом -O2")
-
-plt.savefig("data/g++_O3.png", dpi = 300)
-plt.clf()
-
-avg = [1, 2.71, 6.08, 9.7]
-
-plt.bar (['Naive', 'Array', 'SIMD 256', 'SIMD 256\nFull Pipeline'], avg)
-plt.ylabel ('Ускорение программы в зависимости\n от способа оптимизации в разах\n относительно наивной версии')
-plt.title("Компилятор G++ с флагом -O3")
-
-plt.savefig("data/g++_O3.png", dpi = 300)
-plt.clf()
-
-avg = [1, 3.30, 5.46, 8.6]
-
-plt.bar (['Naive', 'Array', 'SIMD 256', 'SIMD 256\nFull Pipeline'], avg)
-plt.ylabel ('Ускорение программы в зависимости\n от способа оптимизации в разах\n относительно наивной версии')
-plt.title("Компилятор clang++ с флагом -O2")
-
-plt.savefig("data/clang++_O2.png", dpi = 300)
-plt.clf()
-
-avg = [1, 3.30, 5.45, 8.69]
-
-plt.bar (['Naive', 'Array', 'SIMD 256', 'SIMD 256\nFull Pipeline'], avg)
-plt.ylabel ('Ускорение программы в зависимости\n от способа оптимизации в разах\n относительно наивной версии')
-plt.title("Компилятор clang++ с флагом -O3")
-
-plt.savefig("data/clang++_O3.png", dpi = 300)
-
-
-# with open('Output_4.txt', 'r') as f:
-#    data = [float(line.strip()) for line in f]
+# avg = [1, 3.84, 6.08, 9.71]
 #
-# x = np.empty(1000, dtype=np.int16)
+# plt.bar (['Naive', 'Array', 'SIMD 256', 'SIMD 256\nFull Pipeline'], avg)
+# plt.ylabel ('Ускорение программы в зависимости\n от способа оптимизации в разах\n относительно наивной версии')
+# plt.title("Компилятор G++ с флагом -O2")
 #
-# for i in range (1, 1001):
-#     x [i-1] = i
+# plt.savefig("data/g++_O3.png", dpi = 300)
+# plt.clf()
+#
+# avg = [1, 2.71, 6.08, 9.7]
+#
+# plt.bar (['Naive', 'Array', 'SIMD 256', 'SIMD 256\nFull Pipeline'], avg)
+# plt.ylabel ('Ускорение программы в зависимости\n от способа оптимизации в разах\n относительно наивной версии')
+# plt.title("Компилятор G++ с флагом -O3")
+#
+# plt.savefig("data/g++_O3.png", dpi = 300)
+# plt.clf()
+#
+# avg = [1, 3.30, 5.46, 8.6]
+#
+# plt.bar (['Naive', 'Array', 'SIMD 256', 'SIMD 256\nFull Pipeline'], avg)
+# plt.ylabel ('Ускорение программы в зависимости\n от способа оптимизации в разах\n относительно наивной версии')
+# plt.title("Компилятор clang++ с флагом -O2")
+#
+# plt.savefig("data/clang++_O2.png", dpi = 300)
+# plt.clf()
+#
+# avg = [1, 3.30, 5.45, 8.69]
+#
+# plt.bar (['Naive', 'Array', 'SIMD 256', 'SIMD 256\nFull Pipeline'], avg)
+# plt.ylabel ('Ускорение программы в зависимости\n от способа оптимизации в разах\n относительно наивной версии')
+# plt.title("Компилятор clang++ с флагом -O3")
+#
+# plt.savefig("data/clang++_O3.png", dpi = 300)
+
+
 #
 # for version_num in range (0, 4):
 #     plt.hist(data [version_num * iter_num + 250 : (version_num + 1) * iter_num - 250], bins = 100, color = 'blue', edgecolor = 'black')
@@ -181,8 +249,6 @@ plt.savefig("data/clang++_O3.png", dpi = 300)
 #
 #     print ('Погрешность ',version_num,' версии равна ', int (round_significant (delta [version_num])))
 
-# plt.plot (x, data)
-# plt.show ()
 
 # plt.hist(data [100:200], bins = 100, color = 'blue', edgecolor = 'black')
 # plt.grid(axis='y', linestyle='--')

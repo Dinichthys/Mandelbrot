@@ -45,17 +45,35 @@ int main (const int argc, char* const argv[])
                 DrawMandelbrot (settings, Mandelbrot256, kWindowTitle256);
                 break;
             }
-            case k256IntrinFullPipeline:
+            case k256IntrinFullPipelineTwoIter:
             {
-                DrawMandelbrot (settings, Mandelbrot256FullPipeLine, kWindowTitle256FullPipeLine);
+                DrawMandelbrot (settings, Mandelbrot256FullPipeLineTwoIter, kWindowTitle256FullPipeLineTwoIter);
+                break;
+            }
+            case k256IntrinFullPipelineThreeIter:
+            {
+                DrawMandelbrot (settings, Mandelbrot256FullPipeLineThreeIter, kWindowTitle256FullPipeLineThreeIter);
+                break;
+            }
+            case k256IntrinFullPipelineFourIter:
+            {
+                DrawMandelbrot (settings, Mandelbrot256FullPipeLineFourIter, kWindowTitle256FullPipeLineFourIter);
+                break;
+            }
+            case k256IntrinFullPipelineFiveIter:
+            {
+                DrawMandelbrot (settings, Mandelbrot256FullPipeLineFiveIter, kWindowTitle256FullPipeLineFiveIter);
                 break;
             }
             case kAll:
             {
-                DrawMandelbrot (settings, MandelbrotNaive,           kWindowTitleNaive          );
-                DrawMandelbrot (settings, MandelbrotArray,           kWindowTitleArray          );
-                DrawMandelbrot (settings, Mandelbrot256,             kWindowTitle256            );
-                DrawMandelbrot (settings, Mandelbrot256FullPipeLine, kWindowTitle256FullPipeLine);
+                DrawMandelbrot (settings, MandelbrotNaive,                    kWindowTitleNaive                   );
+                DrawMandelbrot (settings, MandelbrotArray,                    kWindowTitleArray                   );
+                DrawMandelbrot (settings, Mandelbrot256,                      kWindowTitle256                     );
+                DrawMandelbrot (settings, Mandelbrot256FullPipeLineTwoIter,   kWindowTitle256FullPipeLineTwoIter  );
+                DrawMandelbrot (settings, Mandelbrot256FullPipeLineThreeIter, kWindowTitle256FullPipeLineThreeIter);
+                DrawMandelbrot (settings, Mandelbrot256FullPipeLineFourIter,  kWindowTitle256FullPipeLineFourIter );
+                DrawMandelbrot (settings, Mandelbrot256FullPipeLineFiveIter,  kWindowTitle256FullPipeLineFiveIter );
                 break;
             }
             default:
@@ -85,17 +103,35 @@ int main (const int argc, char* const argv[])
                 AnalyseMandelbrot (settings, Mandelbrot256);
                 break;
             }
-            case k256IntrinFullPipeline:
+            case k256IntrinFullPipelineTwoIter:
             {
-                AnalyseMandelbrot (settings, Mandelbrot256FullPipeLine);
+                AnalyseMandelbrot (settings, Mandelbrot256FullPipeLineTwoIter);
+                break;
+            }
+            case k256IntrinFullPipelineThreeIter:
+            {
+                AnalyseMandelbrot (settings, Mandelbrot256FullPipeLineThreeIter);
+                break;
+            }
+            case k256IntrinFullPipelineFourIter:
+            {
+                AnalyseMandelbrot (settings, Mandelbrot256FullPipeLineFourIter);
+                break;
+            }
+            case k256IntrinFullPipelineFiveIter:
+            {
+                AnalyseMandelbrot (settings, Mandelbrot256FullPipeLineFiveIter);
                 break;
             }
             case kAll:
             {
-                AnalyseMandelbrot (settings, MandelbrotNaive          );
-                AnalyseMandelbrot (settings, MandelbrotArray          );
-                AnalyseMandelbrot (settings, Mandelbrot256            );
-                AnalyseMandelbrot (settings, Mandelbrot256FullPipeLine);
+                AnalyseMandelbrot (settings, MandelbrotNaive                   );
+                AnalyseMandelbrot (settings, MandelbrotArray                   );
+                AnalyseMandelbrot (settings, Mandelbrot256                     );
+                AnalyseMandelbrot (settings, Mandelbrot256FullPipeLineTwoIter  );
+                AnalyseMandelbrot (settings, Mandelbrot256FullPipeLineThreeIter);
+                AnalyseMandelbrot (settings, Mandelbrot256FullPipeLineFourIter );
+                AnalyseMandelbrot (settings, Mandelbrot256FullPipeLineFiveIter );
                 break;
             }
             default:
