@@ -18,6 +18,9 @@
 
 Вычисления производились с каждой точкой в отдельности. Она считалась "не вылетевшей", пока лежала в пределах доверительной окружности. Количество итераций было ограничено сверху.
 
+<details>
+<summary> Реализация функции на языке C </summary>
+
 ```C
 MandelbrotError MandelbrotNaive (int* const iteration_stop_arr, const settings_of_program_t settings)
 {
@@ -73,12 +76,17 @@ MandelbrotError MandelbrotNaive (int* const iteration_stop_arr, const settings_o
     return kDoneMandelbrot;
 }
 ```
+</details>
 
 ### 2 этап: Версия с массивами
 
 Данная версия использует массивы так, чтобы компилятор, при упоминании флага оптимизации `-O2` смог подставить вместо циклов, работающих с массивами, инструкции, работающие с целым набором данных. Проверка данных подстановок была произведена с помощью сайта [Compiler Explorer](https://godbolt.org/)
 
 Измерения показали, что данная оптимизация помогла ускорить процесс почти в 4 раза при использовании компилятора `G++` с флагом оптимизации `-O2`.
+
+<details>
+<summary> Реализация функции на языке C </summary>
+
 ```C
 #define _ARRAY_FOR_INSTRUCTION(body_for)                    \
             for (index = 0; index < kNumVertexes; index++)  \
@@ -163,10 +171,14 @@ MandelbrotError MandelbrotArray (int* const iteration_stop_arr, const settings_o
 
 #undef _ARRAY_FOR_INSTRUCTION
 ```
+</details>
 
 ### 3 этап: Версия с инструкциями **SIMD**
 
 Данная оптимизация заключалась в подстановке вместо операций над массивами - инструкциями **intrinsic**, способными обрабатывать за одну операцию вектор из 8 чисел (использовались 256-битные интринсики).
+
+<details>
+<summary> Реализация функции на языке C </summary>
 
 ```C
 enum MandelbrotError Mandelbrot256 (int* const iteration_stop_arr, const settings_of_program_t settings)
@@ -260,12 +272,16 @@ enum MandelbrotError Mandelbrot256 (int* const iteration_stop_arr, const setting
     return kDoneMandelbrot;
 }
 ```
+</details>
 
 ### 4 этап: Версия с инструкциями **SIMD** и развёрткой цикла
 
 Данная оптимизация позволила заполнить конвейер независимыми по данным инструкциями, чередуя инструкции, работающие с первыми и с последними 8-ю точками (обработка шла построчно сверху - вниз по экрану, в данной обработке точки брались восьмёрками - по две восьмёрку за одну итерацию цикла).
 
-Развёртка цикла производилась на **2** итерации (таким образом, два подряд идущих набора данных обрабатывались за одну итерацию цикла)
+Развёртка цикла производилась на **2** итерации (таким образом, два подряд идущих набора данных обрабатывались за одну итерацию цикла).
+
+<details>
+<summary> Реализация функции на языке C </summary>
 
 ```C
 enum MandelbrotError Mandelbrot256FullPipeLine (int* const iteration_stop_arr, const settings_of_program_t settings)
@@ -394,6 +410,7 @@ enum MandelbrotError Mandelbrot256FullPipeLine (int* const iteration_stop_arr, c
     return kDoneMandelbrot;
 }
 ```
+</details>
 
 ## Сравнение разных компиляторов
 
