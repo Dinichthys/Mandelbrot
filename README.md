@@ -1,20 +1,22 @@
 # Множество Мандельброта
 
-## Суть задания
+## Цель задания
 
-Суть задания заключалась в отрисовке множества Мандельброта и дальнейшей оптимизации вычислений его.
+Цель задания заключалась в отрисовке множества Мандельброта и дальнейшей оптимизации вычислений его.
 
-## Описание множества
+## Определение множества
 
 Множество Мандельброта — множество точек **z<sub>0</sub>** на комплексной плоскости, для которых рекуррентное соотношение **z<sub>n+1</sub> = z<sub>n</sub><sup>2</sup> + z<sub>0</sub>** задаёт ограниченную последовательность. Таким образом, все эти точки не выходят за пределы како-то ограниченной области на комплексной плоскости.
 
-Изображение множества на комплексной плоскости (цвет точки зависит от итерации, на которой элемент последовательности вылетает за пределы характерной окружности, с радиусом которой сравнивается расстояние от точки до начала отсчёта):
+На изображении цвет каждой точки зависит от итерации, на которой элемент последовательности вылетает за пределы характерной окружности, с радиусом которой сравнивается расстояние от точки до начала отсчёта.
+
+Изображение множества на комплексной плоскости:
 
 ![alt text](data/Mandelbrot.png)
 
 ## Этапы оптимизации
 
-### 1 этап: Наивная версия
+### 1 этап: Базовая версия
 
 Вычисления производились с каждой точкой в отдельности. Она считалась "не вылетевшей", пока лежала в пределах доверительной окружности. Количество итераций было ограничено сверху.
 
@@ -47,6 +49,8 @@ MandelbrotError MandelbrotNaive (int* const iteration_stop_arr, const settings_o
 
             int iteration_stop = 0;
 
+//----------------------------РАСЧЁТНЫЙ--ЦИКЛ------------------------
+
             for (size_t num_point = 0; num_point < kMaxNumIteration; num_point++)
             {
                 float square_x = x_cur * x_cur;
@@ -64,6 +68,8 @@ MandelbrotError MandelbrotNaive (int* const iteration_stop_arr, const settings_o
                     break;
                 }
             }
+
+//-------------------------------------------------------------------
 
             if (settings.graphic_mode)
             {
@@ -89,7 +95,7 @@ MandelbrotError MandelbrotNaive (int* const iteration_stop_arr, const settings_o
 
 ```C
 #define _ARRAY_FOR_INSTRUCTION(body_for)                    \
-            for (index = 0; index < kNumVertexes; index++)  \
+            for (index = 0; index < kNumVertices; index++)  \
             {                                               \
                 body_for;                                   \
             }
@@ -110,34 +116,36 @@ MandelbrotError MandelbrotArray (int* const iteration_stop_arr, const settings_o
 
     for (size_t y_check = 0; y_check < screen_height; y_check++)
     {
-        float y_start [kNumVertexes] = {};
+        float y_start [kNumVertices] = {};
         _ARRAY_FOR_INSTRUCTION (y_start [index] = (y_base  - (float) y_check) / scale)
 
-        for (size_t x_check = 0; x_check < screen_width; x_check += kNumVertexes)
+        for (size_t x_check = 0; x_check < screen_width; x_check += kNumVertices)
         {
-            float x_start [kNumVertexes] = {};
+            float x_start [kNumVertices] = {};
             _ARRAY_FOR_INSTRUCTION (x_start [index] = ((float) x_check + index - x_base) / scale)
 
-            float x_cur [kNumVertexes] = {};
+            float x_cur [kNumVertices] = {};
             _ARRAY_FOR_INSTRUCTION (x_cur [index] = x_start [index])
 
-            float y_cur [kNumVertexes] = {};
+            float y_cur [kNumVertices] = {};
             _ARRAY_FOR_INSTRUCTION (y_cur [index] = y_start [index])
 
-            int iteration_stop [kNumVertexes] = {};
+            int iteration_stop [kNumVertices] = {};
+
+//----------------------------РАСЧЁТНЫЙ--ЦИКЛ------------------------
 
             for (size_t num_point = 0; num_point < kMaxNumIteration; num_point++)
             {
-                float square_x [kNumVertexes] = {};
+                float square_x [kNumVertices] = {};
                 _ARRAY_FOR_INSTRUCTION (square_x [index] = x_cur [index] * x_cur [index])
 
-                float square_y [kNumVertexes] = {};
+                float square_y [kNumVertices] = {};
                 _ARRAY_FOR_INSTRUCTION (square_y [index] = y_cur [index] * y_cur [index])
 
-                float dub_x_mul_y [kNumVertexes] = {};
+                float dub_x_mul_y [kNumVertices] = {};
                 _ARRAY_FOR_INSTRUCTION (dub_x_mul_y  [index] = 2 * x_cur [index] * y_cur [index])
 
-                int cmp [kNumVertexes] = {};
+                int cmp [kNumVertices] = {};
                 _ARRAY_FOR_INSTRUCTION (cmp [index] = (square_x [index] + square_y [index] < kMaxModuleComplex))
 
                 _ARRAY_FOR_INSTRUCTION (iteration_stop [index] += cmp [index])
@@ -154,10 +162,12 @@ MandelbrotError MandelbrotArray (int* const iteration_stop_arr, const settings_o
                 }
             }
 
+//-------------------------------------------------------------------
+
             if (settings.graphic_mode)
             {
                 size_t ver_index = y_check * screen_width + x_check;
-                for (size_t point_index = 0; point_index < kNumVertexes; point_index++)
+                for (size_t point_index = 0; point_index < kNumVertices; point_index++)
                 {
                     iteration_stop_arr [ver_index] = iteration_stop [point_index];
                     ver_index++;
@@ -202,7 +212,7 @@ enum MandelbrotError Mandelbrot256 (int* const iteration_stop_arr, const setting
     __m256 y_base_256 = _mm256_set1_ps (y_base);
     __m256 scale_256  = _mm256_set1_ps (scale);
 
-    alignas (__m256i) int iteration_stop [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256 = _mm256_load_si256 ((__m256i*) iteration_stop);
 
     for (size_t y_check = 0; y_check < screen_height; y_check++)
@@ -211,7 +221,7 @@ enum MandelbrotError Mandelbrot256 (int* const iteration_stop_arr, const setting
         y_start = _mm256_sub_ps (y_base_256, y_start);
         y_start = _mm256_div_ps (y_start, scale_256);
 
-        for (size_t x_check = 0; x_check < screen_width; x_check += kNumVertexesOptimize)
+        for (size_t x_check = 0; x_check < screen_width; x_check += kNumVerticesOptimize)
         {
             __m256 x_start   = _mm256_set1_ps ((float) x_check);
             __m256 temp      = _mm256_set_ps (7, 6, 5, 4, 3, 2, 1, 0);
@@ -224,6 +234,8 @@ enum MandelbrotError Mandelbrot256 (int* const iteration_stop_arr, const setting
             __m256 y_cur = y_start;
 
             iteration_stop_256 = _mm256_setzero_si256 ();
+
+//----------------------------РАСЧЁТНЫЙ--ЦИКЛ------------------------
 
             for (size_t num_point = 0; num_point < kMaxNumIteration; num_point++)
             {
@@ -255,12 +267,15 @@ enum MandelbrotError Mandelbrot256 (int* const iteration_stop_arr, const setting
                 x_cur = _mm256_or_ps (cmp_square_mask, x_cur);
                 y_cur = _mm256_or_ps (cmp_square_mask, y_cur);
             }
+
+//-------------------------------------------------------------------
+
             _mm256_storeu_si256 ((__m256i*) iteration_stop, iteration_stop_256);
 
             if (settings.graphic_mode)
             {
                 size_t ver_index = y_check * screen_width + x_check;
-                for (size_t point_index = 0; point_index < kNumVertexesOptimize; point_index++)
+                for (size_t point_index = 0; point_index < kNumVerticesOptimize; point_index++)
                 {
                     iteration_stop_arr [ver_index] = iteration_stop [point_index];
                     ver_index++;
@@ -350,18 +365,18 @@ enum MandelbrotError Mandelbrot256FullPipeLineFourIter (int* const iteration_sto
 
     float scale = settings.scale;
 
-    size_t delta_x = kNumVertexesOptimize * 4;
+    size_t delta_x = kNumVerticesOptimize * 4;
 
-    alignas (__m256i) int iteration_stop_1 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_1 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_1 = _mm256_load_si256 ((__m256i*) iteration_stop_1);
 
-    alignas (__m256i) int iteration_stop_2 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_2 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_2 = _mm256_load_si256 ((__m256i*) iteration_stop_2);
 
-    alignas (__m256i) int iteration_stop_3 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_3 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_3 = _mm256_load_si256 ((__m256i*) iteration_stop_3);
 
-    alignas (__m256i) int iteration_stop_4 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_4 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_4 = _mm256_load_si256 ((__m256i*) iteration_stop_4);
 
     const __m256 kArrMaxModuleComplex256 = _mm256_set1_ps (kMaxModuleComplex);
@@ -421,6 +436,8 @@ enum MandelbrotError Mandelbrot256FullPipeLineFourIter (int* const iteration_sto
             iteration_stop_256_2 = _mm256_setzero_si256 ();
             iteration_stop_256_3 = _mm256_setzero_si256 ();
             iteration_stop_256_4 = _mm256_setzero_si256 ();
+
+//----------------------------РАСЧЁТНЫЙ--ЦИКЛ------------------------
 
             for (size_t num_point = 0; num_point < kMaxNumIteration; num_point++)
             {
@@ -505,6 +522,8 @@ enum MandelbrotError Mandelbrot256FullPipeLineFourIter (int* const iteration_sto
                 y_cur_4 = _mm256_or_ps (cmp_square_mask_4, y_cur_4);
             }
 
+//-------------------------------------------------------------------
+
             if (settings.graphic_mode)
             {
                 _mm256_storeu_si256 ((__m256i*) iteration_stop_1, iteration_stop_256_1);
@@ -513,12 +532,12 @@ enum MandelbrotError Mandelbrot256FullPipeLineFourIter (int* const iteration_sto
                 _mm256_storeu_si256 ((__m256i*) iteration_stop_4, iteration_stop_256_4);
 
                 size_t ver_index = y_check * screen_width + x_check;
-                for (size_t point_index = 0; point_index < kNumVertexesOptimize; point_index++)
+                for (size_t point_index = 0; point_index < kNumVerticesOptimize; point_index++)
                 {
                     iteration_stop_arr [ver_index]                            = iteration_stop_1 [point_index];
-                    iteration_stop_arr [ver_index + kNumVertexesOptimize    ] = iteration_stop_2 [point_index];
-                    iteration_stop_arr [ver_index + kNumVertexesOptimize * 2] = iteration_stop_3 [point_index];
-                    iteration_stop_arr [ver_index + kNumVertexesOptimize * 3] = iteration_stop_4 [point_index];
+                    iteration_stop_arr [ver_index + kNumVerticesOptimize    ] = iteration_stop_2 [point_index];
+                    iteration_stop_arr [ver_index + kNumVerticesOptimize * 2] = iteration_stop_3 [point_index];
+                    iteration_stop_arr [ver_index + kNumVerticesOptimize * 3] = iteration_stop_4 [point_index];
                     ver_index++;
                 }
             }
@@ -608,7 +627,7 @@ sudo cpupower frequency-set -g ondemand
     </thead>
     <tbody>
         <tr>
-            <td align="center">Наивная реализация</td>
+            <td align="center">Базовая реализация</td>
             <td align="center">
             <img src="data/Naive_stable.png" alt="Фото">
             </td>
@@ -660,7 +679,7 @@ sudo cpupower frequency-set -g ondemand
             <td align="center">-O3</td>
         </tr>
         <tr>
-            <td align="center">Наивная реализация</td>
+            <td align="center">Базовая реализация</td>
             <td align="center">39.8 ± 0.1
             <img src="data/plot_Naive.png" alt="Фото">
             </td>
@@ -742,7 +761,7 @@ sudo cpupower frequency-set -g ondemand
             <td align="center">-O3</td>
         </tr>
         <tr>
-            <td align="center">Наивная реализация</td>
+            <td align="center">Базовая реализация</td>
             <td align="center">1</td>
             <td align="center">1</td>
             <td align="center">1</td>
@@ -787,7 +806,7 @@ sudo cpupower frequency-set -g ondemand
     </tbody>
 </table>
 
-## Вывод
+## Выводы
 Приведённые оптимизации не ускоряют программу ровно в 4 раза, в случае с оптимизацией на массивах, состоящих из 4 элементов, и ровно в 8, в случае с оптимизацией с интринсиками, способными обрабатывать 8 элементов, так как есть некоторые участки функции, где нет оптимизированных вычислений, то есть время, потраченное на их обработку, всегда будет входить в измерения.
 
 Однако, данные способы помогают ускорить программу до 14.58 раз, что означает, что не стоит пренебрегать ими.

@@ -26,8 +26,8 @@ enum MandelbrotVersion
     k256IntrinFullPipelineFiveIter  = 7,
 };
 
-const size_t kNumVertexes         =  4;
-const size_t kNumVertexesOptimize =  8;
+const size_t kNumVertices         =  4;
+const size_t kNumVerticesOptimize =  8;
 
 const size_t kNumberOfLoopUnrolling = 5;
 
@@ -37,7 +37,7 @@ const size_t kCPUFrequency = 2'000'000'000;
 
 const size_t kMaxNumIteration = 256;
 const float kMaxModuleComplex = 100;
-const float kArrMaxModuleComplex [kNumVertexes] = {kMaxModuleComplex, kMaxModuleComplex, kMaxModuleComplex, kMaxModuleComplex};
+const float kArrMaxModuleComplex [kNumVertices] = {kMaxModuleComplex, kMaxModuleComplex, kMaxModuleComplex, kMaxModuleComplex};
 
 #include "draw.h"
 #include "analyse_mandelbrot.h"

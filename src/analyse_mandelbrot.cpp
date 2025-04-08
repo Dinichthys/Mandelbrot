@@ -14,9 +14,9 @@ enum MandelbrotError AnalyseMandelbrot (settings_of_program_t set,
 
     size_t screen_height = set.window_height;
     size_t screen_width  = set.window_width +
-                                          ((kNumVertexesOptimize * kNumberOfLoopUnrolling)
-                                            - (set.window_width % (kNumVertexesOptimize * kNumberOfLoopUnrolling))
-                                          % (kNumVertexesOptimize * kNumberOfLoopUnrolling));
+                                          ((kNumVerticesOptimize * kNumberOfLoopUnrolling)
+                                            - (set.window_width % (kNumVerticesOptimize * kNumberOfLoopUnrolling))
+                                          % (kNumVerticesOptimize * kNumberOfLoopUnrolling));
 
     set.window_width  = screen_width;
     set.window_height = screen_height;

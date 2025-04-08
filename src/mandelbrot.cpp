@@ -65,7 +65,7 @@ MandelbrotError MandelbrotNaive (int* const iteration_stop_arr, const settings_o
 }
 
 #define _ARRAY_FOR_INSTRUCTION(body_for)                    \
-            for (index = 0; index < kNumVertexes; index++)  \
+            for (index = 0; index < kNumVertices; index++)  \
             {                                               \
                 body_for;                                   \
             }
@@ -86,34 +86,34 @@ MandelbrotError MandelbrotArray (int* const iteration_stop_arr, const settings_o
 
     for (size_t y_check = 0; y_check < screen_height; y_check++)
     {
-        float y_start [kNumVertexes] = {};
+        float y_start [kNumVertices] = {};
         _ARRAY_FOR_INSTRUCTION (y_start [index] = (y_base  - (float) y_check) / scale)
 
-        for (size_t x_check = 0; x_check < screen_width; x_check += kNumVertexes)
+        for (size_t x_check = 0; x_check < screen_width; x_check += kNumVertices)
         {
-            float x_start [kNumVertexes] = {};
+            float x_start [kNumVertices] = {};
             _ARRAY_FOR_INSTRUCTION (x_start [index] = ((float) x_check + index - x_base) / scale)
 
-            float x_cur [kNumVertexes] = {};
+            float x_cur [kNumVertices] = {};
             _ARRAY_FOR_INSTRUCTION (x_cur [index] = x_start [index])
 
-            float y_cur [kNumVertexes] = {};
+            float y_cur [kNumVertices] = {};
             _ARRAY_FOR_INSTRUCTION (y_cur [index] = y_start [index])
 
-            int iteration_stop [kNumVertexes] = {};
+            int iteration_stop [kNumVertices] = {};
 
             for (size_t num_point = 0; num_point < kMaxNumIteration; num_point++)
             {
-                float square_x [kNumVertexes] = {};
+                float square_x [kNumVertices] = {};
                 _ARRAY_FOR_INSTRUCTION (square_x [index] = x_cur [index] * x_cur [index])
 
-                float square_y [kNumVertexes] = {};
+                float square_y [kNumVertices] = {};
                 _ARRAY_FOR_INSTRUCTION (square_y [index] = y_cur [index] * y_cur [index])
 
-                float dub_x_mul_y [kNumVertexes] = {};
+                float dub_x_mul_y [kNumVertices] = {};
                 _ARRAY_FOR_INSTRUCTION (dub_x_mul_y  [index] = 2 * x_cur [index] * y_cur [index])
 
-                int cmp [kNumVertexes] = {};
+                int cmp [kNumVertices] = {};
                 _ARRAY_FOR_INSTRUCTION (cmp [index] = (square_x [index] + square_y [index] < kMaxModuleComplex))
 
                 _ARRAY_FOR_INSTRUCTION (iteration_stop [index] += cmp [index])
@@ -133,7 +133,7 @@ MandelbrotError MandelbrotArray (int* const iteration_stop_arr, const settings_o
             if (settings.graphic_mode)
             {
                 size_t ver_index = y_check * screen_width + x_check;
-                for (size_t point_index = 0; point_index < kNumVertexes; point_index++)
+                for (size_t point_index = 0; point_index < kNumVertices; point_index++)
                 {
                     iteration_stop_arr [ver_index] = iteration_stop [point_index];
                     ver_index++;
@@ -168,7 +168,7 @@ enum MandelbrotError Mandelbrot256 (int* const iteration_stop_arr, const setting
     __m256 y_base_256 = _mm256_set1_ps (y_base);
     __m256 scale_256  = _mm256_set1_ps (scale);
 
-    alignas (__m256i) int iteration_stop [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256 = _mm256_load_si256 ((__m256i*) iteration_stop);
 
     for (size_t y_check = 0; y_check < screen_height; y_check++)
@@ -177,7 +177,7 @@ enum MandelbrotError Mandelbrot256 (int* const iteration_stop_arr, const setting
         y_start = _mm256_sub_ps (y_base_256, y_start);
         y_start = _mm256_div_ps (y_start, scale_256);
 
-        for (size_t x_check = 0; x_check < screen_width; x_check += kNumVertexesOptimize)
+        for (size_t x_check = 0; x_check < screen_width; x_check += kNumVerticesOptimize)
         {
             volatile int mask = 0;
             __m256 x_start   = _mm256_set1_ps ((float) x_check);
@@ -228,7 +228,7 @@ enum MandelbrotError Mandelbrot256 (int* const iteration_stop_arr, const setting
                 _mm256_storeu_si256 ((__m256i*) iteration_stop, iteration_stop_256);
 
                 size_t ver_index = y_check * screen_width + x_check;
-                for (size_t point_index = 0; point_index < kNumVertexesOptimize; point_index++)
+                for (size_t point_index = 0; point_index < kNumVerticesOptimize; point_index++)
                 {
                     iteration_stop_arr [ver_index] = iteration_stop [point_index];
                     ver_index++;
@@ -252,12 +252,12 @@ enum MandelbrotError Mandelbrot256FullPipeLineTwoIter (int* const iteration_stop
 
     float scale = settings.scale;
 
-    size_t delta_x = kNumVertexesOptimize * 2;
+    size_t delta_x = kNumVerticesOptimize * 2;
 
-    alignas (__m256i) int iteration_stop_1 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_1 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_1 = _mm256_load_si256 ((__m256i*) iteration_stop_1);
 
-    alignas (__m256i) int iteration_stop_2 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_2 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_2 = _mm256_load_si256 ((__m256i*) iteration_stop_2);
 
     const __m256 kArrMaxModuleComplex256 = _mm256_set1_ps (kMaxModuleComplex);
@@ -356,10 +356,10 @@ enum MandelbrotError Mandelbrot256FullPipeLineTwoIter (int* const iteration_stop
                 _mm256_storeu_si256 ((__m256i*) iteration_stop_2, iteration_stop_256_2);
 
                 size_t ver_index = y_check * screen_width + x_check;
-                for (size_t point_index = 0; point_index < kNumVertexesOptimize; point_index++)
+                for (size_t point_index = 0; point_index < kNumVerticesOptimize; point_index++)
                 {
                     iteration_stop_arr [ver_index]                        = iteration_stop_1 [point_index];
-                    iteration_stop_arr [ver_index + kNumVertexesOptimize] = iteration_stop_2 [point_index];
+                    iteration_stop_arr [ver_index + kNumVerticesOptimize] = iteration_stop_2 [point_index];
                     ver_index++;
                 }
             }
@@ -381,15 +381,15 @@ enum MandelbrotError Mandelbrot256FullPipeLineThreeIter (int* const iteration_st
 
     float scale = settings.scale;
 
-    size_t delta_x = kNumVertexesOptimize * 3;
+    size_t delta_x = kNumVerticesOptimize * 3;
 
-    alignas (__m256i) int iteration_stop_1 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_1 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_1 = _mm256_load_si256 ((__m256i*) iteration_stop_1);
 
-    alignas (__m256i) int iteration_stop_2 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_2 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_2 = _mm256_load_si256 ((__m256i*) iteration_stop_2);
 
-    alignas (__m256i) int iteration_stop_3 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_3 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_3 = _mm256_load_si256 ((__m256i*) iteration_stop_3);
 
     const __m256 kArrMaxModuleComplex256 = _mm256_set1_ps (kMaxModuleComplex);
@@ -515,11 +515,11 @@ enum MandelbrotError Mandelbrot256FullPipeLineThreeIter (int* const iteration_st
                 _mm256_storeu_si256 ((__m256i*) iteration_stop_3, iteration_stop_256_3);
 
                 size_t ver_index = y_check * screen_width + x_check;
-                for (size_t point_index = 0; point_index < kNumVertexesOptimize; point_index++)
+                for (size_t point_index = 0; point_index < kNumVerticesOptimize; point_index++)
                 {
                     iteration_stop_arr [ver_index]                            = iteration_stop_1 [point_index];
-                    iteration_stop_arr [ver_index + kNumVertexesOptimize    ] = iteration_stop_2 [point_index];
-                    iteration_stop_arr [ver_index + kNumVertexesOptimize * 2] = iteration_stop_3 [point_index];
+                    iteration_stop_arr [ver_index + kNumVerticesOptimize    ] = iteration_stop_2 [point_index];
+                    iteration_stop_arr [ver_index + kNumVerticesOptimize * 2] = iteration_stop_3 [point_index];
                     ver_index++;
                 }
             }
@@ -541,18 +541,18 @@ enum MandelbrotError Mandelbrot256FullPipeLineFourIter (int* const iteration_sto
 
     float scale = settings.scale;
 
-    size_t delta_x = kNumVertexesOptimize * 4;
+    size_t delta_x = kNumVerticesOptimize * 4;
 
-    alignas (__m256i) int iteration_stop_1 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_1 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_1 = _mm256_load_si256 ((__m256i*) iteration_stop_1);
 
-    alignas (__m256i) int iteration_stop_2 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_2 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_2 = _mm256_load_si256 ((__m256i*) iteration_stop_2);
 
-    alignas (__m256i) int iteration_stop_3 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_3 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_3 = _mm256_load_si256 ((__m256i*) iteration_stop_3);
 
-    alignas (__m256i) int iteration_stop_4 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_4 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_4 = _mm256_load_si256 ((__m256i*) iteration_stop_4);
 
     const __m256 kArrMaxModuleComplex256 = _mm256_set1_ps (kMaxModuleComplex);
@@ -704,12 +704,12 @@ enum MandelbrotError Mandelbrot256FullPipeLineFourIter (int* const iteration_sto
                 _mm256_storeu_si256 ((__m256i*) iteration_stop_4, iteration_stop_256_4);
 
                 size_t ver_index = y_check * screen_width + x_check;
-                for (size_t point_index = 0; point_index < kNumVertexesOptimize; point_index++)
+                for (size_t point_index = 0; point_index < kNumVerticesOptimize; point_index++)
                 {
                     iteration_stop_arr [ver_index]                            = iteration_stop_1 [point_index];
-                    iteration_stop_arr [ver_index + kNumVertexesOptimize    ] = iteration_stop_2 [point_index];
-                    iteration_stop_arr [ver_index + kNumVertexesOptimize * 2] = iteration_stop_3 [point_index];
-                    iteration_stop_arr [ver_index + kNumVertexesOptimize * 3] = iteration_stop_4 [point_index];
+                    iteration_stop_arr [ver_index + kNumVerticesOptimize    ] = iteration_stop_2 [point_index];
+                    iteration_stop_arr [ver_index + kNumVerticesOptimize * 2] = iteration_stop_3 [point_index];
+                    iteration_stop_arr [ver_index + kNumVerticesOptimize * 3] = iteration_stop_4 [point_index];
                     ver_index++;
                 }
             }
@@ -731,21 +731,21 @@ enum MandelbrotError Mandelbrot256FullPipeLineFiveIter (int* const iteration_sto
 
     float scale = settings.scale;
 
-    size_t delta_x = kNumVertexesOptimize * 5;
+    size_t delta_x = kNumVerticesOptimize * 5;
 
-    alignas (__m256i) int iteration_stop_1 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_1 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_1 = _mm256_load_si256 ((__m256i*) iteration_stop_1);
 
-    alignas (__m256i) int iteration_stop_2 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_2 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_2 = _mm256_load_si256 ((__m256i*) iteration_stop_2);
 
-    alignas (__m256i) int iteration_stop_3 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_3 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_3 = _mm256_load_si256 ((__m256i*) iteration_stop_3);
 
-    alignas (__m256i) int iteration_stop_4 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_4 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_4 = _mm256_load_si256 ((__m256i*) iteration_stop_4);
 
-    alignas (__m256i) int iteration_stop_5 [kNumVertexesOptimize] = {};
+    alignas (__m256i) int iteration_stop_5 [kNumVerticesOptimize] = {};
     __m256i iteration_stop_256_5 = _mm256_load_si256 ((__m256i*) iteration_stop_5);
 
     const __m256 kArrMaxModuleComplex256 = _mm256_set1_ps (kMaxModuleComplex);
@@ -923,13 +923,13 @@ enum MandelbrotError Mandelbrot256FullPipeLineFiveIter (int* const iteration_sto
                 _mm256_storeu_si256 ((__m256i*) iteration_stop_5, iteration_stop_256_5);
 
                 size_t ver_index = y_check * screen_width + x_check;
-                for (size_t point_index = 0; point_index < kNumVertexesOptimize; point_index++)
+                for (size_t point_index = 0; point_index < kNumVerticesOptimize; point_index++)
                 {
                     iteration_stop_arr [ver_index]                            = iteration_stop_1 [point_index];
-                    iteration_stop_arr [ver_index + kNumVertexesOptimize    ] = iteration_stop_2 [point_index];
-                    iteration_stop_arr [ver_index + kNumVertexesOptimize * 2] = iteration_stop_3 [point_index];
-                    iteration_stop_arr [ver_index + kNumVertexesOptimize * 3] = iteration_stop_4 [point_index];
-                    iteration_stop_arr [ver_index + kNumVertexesOptimize * 4] = iteration_stop_5 [point_index];
+                    iteration_stop_arr [ver_index + kNumVerticesOptimize    ] = iteration_stop_2 [point_index];
+                    iteration_stop_arr [ver_index + kNumVerticesOptimize * 2] = iteration_stop_3 [point_index];
+                    iteration_stop_arr [ver_index + kNumVerticesOptimize * 3] = iteration_stop_4 [point_index];
+                    iteration_stop_arr [ver_index + kNumVerticesOptimize * 4] = iteration_stop_5 [point_index];
                     ver_index++;
                 }
             }

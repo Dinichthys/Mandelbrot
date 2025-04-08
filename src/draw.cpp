@@ -24,9 +24,9 @@ enum MandelbrotError DrawMandelbrot (settings_of_program_t set,
 
     size_t screen_height = set.window_height;
     size_t screen_width  = set.window_width +
-                                          ((kNumVertexesOptimize * kNumberOfLoopUnrolling)
-                                            - (set.window_width % (kNumVertexesOptimize * kNumberOfLoopUnrolling))
-                                          % (kNumVertexesOptimize * kNumberOfLoopUnrolling));
+                                          ((kNumVerticesOptimize * kNumberOfLoopUnrolling)
+                                            - (set.window_width % (kNumVerticesOptimize * kNumberOfLoopUnrolling))
+                                          % (kNumVerticesOptimize * kNumberOfLoopUnrolling));
 
     set.window_width  = screen_width;
     set.window_height = screen_height;
@@ -55,7 +55,7 @@ enum MandelbrotError DrawMandelbrot (settings_of_program_t set,
 
     size_t vertex_size = screen_height * screen_width;
 
-    sf::VertexArray vertexes (sf::PrimitiveType::Points, vertex_size);
+    sf::VertexArray vertices (sf::PrimitiveType::Points, vertex_size);
 
     bool window_is_open = true;
 
@@ -81,21 +81,21 @@ enum MandelbrotError DrawMandelbrot (settings_of_program_t set,
 
         for (size_t point_index = 0; point_index < vertex_size; point_index++)
         {
-            vertexes [point_index].position = {(float) (point_index % screen_width), (float) (point_index / screen_width)};
+            vertices [point_index].position = {(float) (point_index % screen_width), (float) (point_index / screen_width)};
 
-            vertexes [point_index].color.r = iteration_stop_arr [point_index] << 2;
-            vertexes [point_index].color.g = iteration_stop_arr [point_index] << 1;
-            vertexes [point_index].color.b = iteration_stop_arr [point_index];
+            vertices [point_index].color.r = iteration_stop_arr [point_index] << 2;
+            vertices [point_index].color.g = iteration_stop_arr [point_index] << 1;
+            vertices [point_index].color.b = iteration_stop_arr [point_index];
         }
 
         sprintf (fps_str, "%2d", (int) (kCPUFrequency / (end - start)));
         text.setString (fps_str);
-        window.draw (vertexes);
+        window.draw (vertices);
         window.draw (text);
         window.display ();
     }
 
-    vertexes.clear ();
+    vertices.clear ();
     free (iteration_stop_arr);
 
     return kDoneMandelbrot;
