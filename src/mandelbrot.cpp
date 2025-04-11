@@ -358,8 +358,11 @@ enum MandelbrotError Mandelbrot256FullPipeLineTwoIter (int* const iteration_stop
                 size_t ver_index = y_check * screen_width + x_check;
                 for (size_t point_index = 0; point_index < kNumVerticesOptimize; point_index++)
                 {
-                    iteration_stop_arr [ver_index]                        = iteration_stop_1 [point_index];
-                    iteration_stop_arr [ver_index + kNumVerticesOptimize] = iteration_stop_2 [point_index];
+                    iteration_stop_arr [ver_index] = iteration_stop_1 [point_index];
+                    if (ver_index + kNumVerticesOptimize < screen_height * screen_width)
+                    {
+                        iteration_stop_arr [ver_index + kNumVerticesOptimize] = iteration_stop_2 [point_index];
+                    }
                     ver_index++;
                 }
             }
@@ -517,9 +520,15 @@ enum MandelbrotError Mandelbrot256FullPipeLineThreeIter (int* const iteration_st
                 size_t ver_index = y_check * screen_width + x_check;
                 for (size_t point_index = 0; point_index < kNumVerticesOptimize; point_index++)
                 {
-                    iteration_stop_arr [ver_index]                            = iteration_stop_1 [point_index];
-                    iteration_stop_arr [ver_index + kNumVerticesOptimize    ] = iteration_stop_2 [point_index];
-                    iteration_stop_arr [ver_index + kNumVerticesOptimize * 2] = iteration_stop_3 [point_index];
+                    iteration_stop_arr [ver_index] = iteration_stop_1 [point_index];
+                    if (ver_index + kNumVerticesOptimize < screen_height * screen_width)
+                    {
+                        iteration_stop_arr [ver_index + kNumVerticesOptimize] = iteration_stop_2 [point_index];
+                    }
+                    if (ver_index + kNumVerticesOptimize * 2 < screen_height * screen_width)
+                    {
+                        iteration_stop_arr [ver_index + kNumVerticesOptimize * 2] = iteration_stop_3 [point_index];
+                    }
                     ver_index++;
                 }
             }
@@ -706,10 +715,19 @@ enum MandelbrotError Mandelbrot256FullPipeLineFourIter (int* const iteration_sto
                 size_t ver_index = y_check * screen_width + x_check;
                 for (size_t point_index = 0; point_index < kNumVerticesOptimize; point_index++)
                 {
-                    iteration_stop_arr [ver_index]                            = iteration_stop_1 [point_index];
-                    iteration_stop_arr [ver_index + kNumVerticesOptimize    ] = iteration_stop_2 [point_index];
-                    iteration_stop_arr [ver_index + kNumVerticesOptimize * 2] = iteration_stop_3 [point_index];
-                    iteration_stop_arr [ver_index + kNumVerticesOptimize * 3] = iteration_stop_4 [point_index];
+                    iteration_stop_arr [ver_index] = iteration_stop_1 [point_index];
+                    if (ver_index + kNumVerticesOptimize < screen_height * screen_width)
+                    {
+                        iteration_stop_arr [ver_index + kNumVerticesOptimize] = iteration_stop_2 [point_index];
+                    }
+                    if (ver_index + kNumVerticesOptimize * 2 < screen_height * screen_width)
+                    {
+                        iteration_stop_arr [ver_index + kNumVerticesOptimize * 2] = iteration_stop_3 [point_index];
+                    }
+                    if (ver_index + kNumVerticesOptimize * 3 < screen_height * screen_width)
+                    {
+                        iteration_stop_arr [ver_index + kNumVerticesOptimize * 3] = iteration_stop_4 [point_index];
+                    }
                     ver_index++;
                 }
             }
@@ -925,11 +943,23 @@ enum MandelbrotError Mandelbrot256FullPipeLineFiveIter (int* const iteration_sto
                 size_t ver_index = y_check * screen_width + x_check;
                 for (size_t point_index = 0; point_index < kNumVerticesOptimize; point_index++)
                 {
-                    iteration_stop_arr [ver_index]                            = iteration_stop_1 [point_index];
-                    iteration_stop_arr [ver_index + kNumVerticesOptimize    ] = iteration_stop_2 [point_index];
-                    iteration_stop_arr [ver_index + kNumVerticesOptimize * 2] = iteration_stop_3 [point_index];
-                    iteration_stop_arr [ver_index + kNumVerticesOptimize * 3] = iteration_stop_4 [point_index];
-                    iteration_stop_arr [ver_index + kNumVerticesOptimize * 4] = iteration_stop_5 [point_index];
+                    iteration_stop_arr [ver_index] = iteration_stop_1 [point_index];
+                    if (ver_index + kNumVerticesOptimize < screen_height * screen_width)
+                    {
+                        iteration_stop_arr [ver_index + kNumVerticesOptimize] = iteration_stop_2 [point_index];
+                    }
+                    if (ver_index + kNumVerticesOptimize * 2 < screen_height * screen_width)
+                    {
+                        iteration_stop_arr [ver_index + kNumVerticesOptimize * 2] = iteration_stop_3 [point_index];
+                    }
+                    if (ver_index + kNumVerticesOptimize * 3 < screen_height * screen_width)
+                    {
+                        iteration_stop_arr [ver_index + kNumVerticesOptimize * 3] = iteration_stop_4 [point_index];
+                    }
+                    if (ver_index + kNumVerticesOptimize * 4 < screen_height * screen_width)
+                    {
+                        iteration_stop_arr [ver_index + kNumVerticesOptimize * 4] = iteration_stop_5 [point_index];
+                    }
                     ver_index++;
                 }
             }
